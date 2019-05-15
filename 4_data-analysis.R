@@ -1,6 +1,7 @@
 ####################################################################################
 ##                              4.Data Analysis                                  ##
 ####################################################################################
+
 # R Basics ---------------------------------------------------------------------
 snp <- read.csv("/Users/adiaslo/Downloads/Q-Step-Workshop-R-for-Data-Visualisation-and-Statistical-Analysis-master/snp.csv")
 names(snp) # names variables in the data frame.
@@ -17,6 +18,7 @@ head(snp) # top six rows of the data.
 tail(snp) # bottom six rows of the data.
 detach(snp) # detach the data frame.
 # rm(list = ls()) # remove all objects from environment.
+
 # Stats Basics ---------------------------------------------------------------------
 ### mean
 sum(snp$comments_count_fb)/length(snp$comments_count_fb) # caculate the sum of the variable and dived it by the length.
@@ -70,7 +72,9 @@ prop.table(table1, 2) # column percentages
 # rounding by 2 decimal places
 round(100*prop.table(table1,1),2)
 round(100*prop.table(table1,2),2)
+
 # LMs ---------------------------------------------------------------------
+
 # T-TEST: 
 # the function for both one- and two-sample t test is t.test.
 ### one-sample t-test: we just need to specify the variable of interest and then we need to specify the baseline for comparison.
@@ -165,6 +169,7 @@ stargazer(lm1, lm2,
           align = TRUE, type = "text", out = "ols_likes_fb.txt")
 
 # GLMs ---------------------------------------------------------------------
+
 # X-SQUARE TEST: 
 # difference between the observed cell values and the expected cell values.
 table1 <- table(snp$type, snp$sentiment) # table between the two categorical variables in the data frame.
