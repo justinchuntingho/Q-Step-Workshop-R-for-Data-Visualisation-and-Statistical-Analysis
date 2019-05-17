@@ -1,4 +1,9 @@
-# Introducing dplyr and tidyr
+# ---
+# title: Introducing dplyr and tidyr
+# author: Justin Ho, The Carpentries
+# last updated: 15/05/2019
+# credit: Adapted from Data Carpentry workshops (Social Science Curriculum)
+# ---
 
 ####################################################################################
 ## Data Manipulation using dplyr and tidyr                                        ##

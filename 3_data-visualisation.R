@@ -1,22 +1,15 @@
-# Introduction to R
-# Last updated: 22 Nov 2018
-
-####################################################################################
-## Installing packages                                                            ##
-####################################################################################
-install.packages("ggplot2")
-install.packages("dplyr")
-install.packages("scales")
-install.packages("lubridate")
+# ---
+# title: Data Visualisation using ggplot2
+# author: Justin Ho
+# last updated: 15/05/2019
+# credit: Adapted from Introduction to R for Absolute Beginners workshops
+# ---
 
 ####################################################################################
 ## Loading dataset into R                                                         ##
 ####################################################################################
 
-# You can get output from R simply by typing math in the console.
-# However, to do useful and interesting things, we need to assign values to
-# objects. To create an object, we need to give it a name followed by the
-# assignment operator `<-`.
+
 # The following code will load a dataset into R's memory and stored an object named 'snp'.
 
 snp <- read.csv("snp.csv", stringsAsFactors = FALSE) # Load the file 'snp.csv', put it as an object called 'snp'
@@ -31,33 +24,8 @@ snp
 # Sometimes, you might even crash your R if the object is too large.
 # To safely view a portion of an object, you could use the 'head()' function
 
-## Functions:
-# - Functions are "canned scripts"
-# - Predefined, or can be made available by importing R *packages*
-# - A function usually gets one or more inputs called *arguments*
-# - Can return a single value, and also a set of things, or even a dataset 
-
-## Arguments:
-# - can be anything (numbers, filenames, objects etc)
-# - must be looked up in the documentation
-# - Some functions take on a *default* value
-
 # The 'head()' function will return the first sixth element of an object:
 head(snp)
-
-# We could also look at the help for this function using `?head`
-?head
-
-# We see that if we want a different size for the result, we can add an argument:
-head(snp, n = 10)
-
-# If you provide the arguments in the exact same order as they are defined you
-# don't have to name them:
-head(snp, 10)
-
-########## Exercise 1 ########## 
-# Using the 'tail()' function, find out the date of the last post in the dataset.
-##############################
 
 
 ####################################################################################

@@ -1,4 +1,9 @@
-# Starting with Data
+# ---
+# title: Starting with Data
+# author: Justin Ho, The Carpentries
+# last updated: 15/05/2019
+# credit: Adapted from Data Carpentry workshops (Social Science Curriculum)
+# ---
 
 ####################################################################################
 ## Setting Up                                                                     ##

@@ -1,4 +1,9 @@
-# Introduction to R
+# ---
+# title: Introduction to R
+# author: Justin Ho, The Carpentries
+# last updated: 15/05/2019
+# credit: Adapted from Data Carpentry workshops (Social Science Curriculum)
+# ---
 
 ####################################################################################
 ## Creating objects in R                                                          ##
