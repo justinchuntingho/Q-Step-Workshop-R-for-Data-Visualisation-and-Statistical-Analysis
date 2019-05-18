@@ -8,14 +8,6 @@
 ####################################################################################
 ## Setting Up                                                                     ##
 ####################################################################################
-
-dir.create("data")
-dir.create("data_output")
-dir.create("fig_output")
-download.file("https://ndownloader.figshare.com/files/11492171",
-              "data/SAFI_clean.csv", mode = "wb")
-
-
 # You are going load the data in R's memory using the function `read_csv()`
 # from the `readr` package which is part of the **`tidyverse`**. 
 # So, before we can use the `read_csv()` function, we need to load the package. 

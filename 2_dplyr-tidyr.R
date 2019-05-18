@@ -302,33 +302,3 @@ interviews_gather <- interviews_spread %>%
 # View both `interviews_gather` and `interviews_spread` and compare their
 # structure. Notice that the rows have been reordered in `interviews_gather` such
 # that all of the respondents with a particular wall type are grouped together.
-
-####################################################################################
-## Exporting data                                                                 ##
-####################################################################################
-# Similar to the `read_csv()` function used for reading CSV files into R, there is
-# a `write_csv()` function that generates CSV files from data frames.
-
-# In preparation for our next lesson on plotting, we are going to create a
-# version of the dataset where each of the columns includes only one
-# data value. To do this, we will use spread to expand the
-# `months_lack_food` and `items_owned` columns. We will also create a couple of summary columns.
-
-interviews_plotting <- interviews %>%
-  ## spread data by items_owned
-  mutate(split_items = strsplit(items_owned, ";")) %>%
-  unnest() %>%
-  mutate(items_owned_logical = TRUE) %>%
-  spread(key = split_items, value = items_owned_logical, fill = FALSE) %>%
-  rename(no_listed_items = `<NA>`) %>%
-  ## spread data by months_lack_food
-  mutate(split_months = strsplit(months_lack_food, ";")) %>%
-  unnest() %>%
-  mutate(months_lack_food_logical = TRUE) %>%
-  spread(key = split_months, value = months_lack_food_logical, fill = FALSE) %>%
-  ## add some summary columns
-  mutate(number_months_lack_food = rowSums(select(., Apr:Sept))) %>%
-  mutate(number_items = rowSums(select(., bicycle:television)))
-
-# Now we can save this data frame to our `data_output` directory.
-write_csv(interviews_plotting, path = "data_output/interviews_plotting.csv")
