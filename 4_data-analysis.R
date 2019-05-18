@@ -187,7 +187,7 @@ CrossTable(table1, expected = TRUE, prop.r = FALSE, prop.c = FALSE,
            prop.t = FALSE, prop.chisq = FALSE)
 
 # LOGISTIC REGRESSION
-# let's perfom a logistic regression on comments by type of post.
+# let's perfom a logistic regression on comments by type of post and number of likes.
 # we will use the glm function: glm(formula, family=familytype(link=linkfunction), data=)
 
 # Family	Default / Link Function
@@ -213,9 +213,13 @@ table(snp$comments_dummy)
 # INDEPENDENT VARIABLE
 # (1) type of post
 summary(snp$type)
-# (2) valence
-summary(snp$valence)
-hist(snp$valence)
+# (2) number of likes
+summary(snp$likes_count_fb)
+hist(snp$likes_count_fb)
+hist(log10(snp$likes_count_fb))
+snp$likes_count_fb2 <- log10(snp$likes_count_fb) # we will need to create a new variable for the 
+                                                 # log 10 of # of likes to calculate the predicted
+                                                 # probability. (you will understand why below)
 
 #### MODEL1: using link as the reference group:
 glm1 <- glm(comments_dummy ~ type, family=binomial(link='logit'), data=snp) 
@@ -223,7 +227,7 @@ summary(glm1)
 exp(coef(glm1))
 
 #### MODEL2:
-glm2 <- glm(comments_dummy ~ type + , family=binomial(link='logit'), data=snp) 
+glm2 <- glm(comments_dummy ~ type + likes_count_fb2 , family=binomial(link='logit'), data=snp) 
 summary(glm2) 
 exp(coef(glm2))
 
@@ -232,9 +236,12 @@ exp(coef(glm2))
 # we recomend checking the website if you want to calculate predicted probabilities using your data. 
 # 
 # (1) we will start by calculating the predicted probability of having more than average comments on 
-# the post for each type of post holding valence at the mean.
-# first, we create the data frame to calculate the predicted probability.
-data.pred <- with(snp, data.frame(valence = mean(valence), type = c("video", "link","photo"))) 
+# the post for each type of post holding likes on the post at the mean.
+# first, we create the data frame to calculate the predicted probability. the names of the variables in the new
+# data frame must have the same names as the variables in your logistic regression above 
+# (e.g. in this example the mean for the log10 "likes_count_fb2" must be named "likes_count_fb2": that is why you
+# need to create a new variable for the log10).
+data.pred <- with(snp, data.frame(likes_count_fb2 = mean(likes_count_fb2), type = c("video", "link","photo"))) 
 data.pred  
 # now that we have the data frame we want to use to calculate the predicted probabilities, we can tell R to 
 # create the predicted probabilities. 
@@ -246,10 +253,13 @@ data.pred$pred <- predict(glm2, newdata = data.pred , type = "response")
 data.pred 
 # the predicted probability of having more than average comments on the post is 0.52 for posts that contains a video.
 
-#plot
-data.pred2 <- with(snp, data.frame(valence = rep(seq(from = -7, to = 10),1), type = c("video", "link","photo"))) 
+# plotting the predicted probability:
+data.pred2 <- with(snp, data.frame(likes_count_fb2 = rep(seq(from = 0.6021, to = 4.4158, length.out = 10), 3), type = c("video", "link","photo"))) 
 data.pred2
 data.pred2$pred2 <- predict(glm2, newdata = data.pred2 , type = "response")
-exp(coef(glm1))
-
-
+head(data.pred2)
+# graph code:
+library(ggplot2)
+ggplot(data.pred2, aes(x = likes_count_fb2, y = pred2)) + 
+  geom_line(aes(colour = type)) +
+  theme_bw()
