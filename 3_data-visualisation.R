@@ -44,19 +44,13 @@ snp[675, ]
 # We can combine them into one single line:
 snp[which.max(snp$likes_count_fb), ]
 
-########## Exercise 3 ########## 
+########## Exercise ########## 
 # Find out which post has most comments and shares
 
 # Tricky Questions: Could you find out how to just extract the link?
 # Tips: start with extracting all the links ('snp$post_link'),
 # then use the index to select the one we want
 
-########## Solution ########## 
-# Find the post
-snp[which.max(snp$likes_count_fb), ]
-
-# Get the link directly
-snp$post_link[which.max(snp$likes_count_fb)]
 ##############################
 
 ####################################################################################
@@ -104,12 +98,8 @@ ggplot(data = snp, aes(x = comments_count_fb, fill = "red")) +
 ggplot(data = snp, aes(x = comments_count_fb, fill = type)) +
   geom_histogram(binwidth = 100, alpha = 0.8)
 
-########## Exercise 4 ########## 
+########## Exercise ########## 
 # Using the codes above, create a histogram for Likes count ('likes_count_fb')
-
-########## Solution ########## 
-ggplot(data = snp, aes(x = likes_count_fb, fill = type)) +
-  geom_histogram(binwidth = 100, alpha = 0.8)
 
 ##############################
 
@@ -224,17 +214,9 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
   geom_smooth(method = "lm", se = FALSE) +
   facet_wrap(~ type)
 
-########## Exercise 5 ########## 
+########## Exercise ########## 
 # Make a scatter plot of shares by comments count, log both axes,
 # color them by post type, change shape by post type (adding 'shape = type ' in aes())
-
-
-########## Solution ########## 
-ggplot(data = snp, aes(x = comments_count_fb, y = shares_count_fb, color = type, shape = type)) +
-  geom_point(alpha = 0.5) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(method = "lm", se = FALSE)
 
 ##############################
 
@@ -317,7 +299,7 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
 ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
   geom_area(position = "fill")
 
-########## Exercise 6 ########## 
+########## Exercise ########## 
 # Using the above codes, aggregate comment counts by month.
 # Plot an area plot (selection a sensibile position)
 
@@ -326,14 +308,6 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
 #   group_by(type, date=floor_date(date, "month")) %>%
 #   summarise(###### = sum(#######))  # Change the ########### into the variable names
 
-
-########## Solution ########## 
-plot_data <- snp %>%
-  group_by(type, date=floor_date(date, "month")) %>%
-  summarise(total_comments = sum(comments_count_fb))
-
-ggplot(data = plot_data, aes(x = date, y = total_comments, fill = type)) +
-  geom_area(position = "fill")
 ##############################
 
 
