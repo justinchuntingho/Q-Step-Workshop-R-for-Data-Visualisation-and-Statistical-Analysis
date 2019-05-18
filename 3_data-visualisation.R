@@ -301,7 +301,7 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
 
 ########## Exercise ########## 
 # Using the above codes, aggregate comment counts by month.
-# Plot an area plot (selection a sensibile position)
+# Plot an area plot (select a sensibile position)
 
 # TIPS:
 # plot_data <- snp %>% 
