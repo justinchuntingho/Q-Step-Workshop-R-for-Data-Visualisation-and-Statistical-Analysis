@@ -187,7 +187,7 @@ CrossTable(table1, expected = TRUE, prop.r = FALSE, prop.c = FALSE,
            prop.t = FALSE, prop.chisq = FALSE)
 
 # LOGISTIC REGRESSION
-# let's perfom a logistic regression on comments by type of post and number of likes.
+# let's perfom a logistic regression on negative posts by type of post and number of likes.
 # we will use the glm function: glm(formula, family=familytype(link=linkfunction), data=)
 
 # Family	Default / Link Function
@@ -202,13 +202,8 @@ CrossTable(table1, expected = TRUE, prop.r = FALSE, prop.c = FALSE,
 # quasipoisson	/ (link = "log")
 
 # DEPENDENT VARIABLE
-# first, we need to create a binary variable for comments on a post. we will dived the variable by
-# posts that received more than the average # of comments and posts that received less than average.
-summary(snp$comments_count_fb)
-snp$comments_dummy[snp$comments_count_fb< 413.4] <- 1
-snp$comments_dummy[snp$comments_count_fb>=413.4] <- 0
-summary(snp$comments_dummy)
-table(snp$comments_dummy)
+# first, we need to create a binary variable for negative comments.
+snp$negative <- revalue(snp$sentiment, c("negative"= 1, "neutral"=0, "positive"=0))
 
 # INDEPENDENT VARIABLE
 # (1) type of post
@@ -222,12 +217,12 @@ snp$likes_count_fb2 <- log10(snp$likes_count_fb) # we will need to create a new 
                                                  # probability. (you will understand why below)
 
 #### MODEL1: using link as the reference group:
-glm1 <- glm(comments_dummy ~ type, family=binomial(link='logit'), data=snp) 
+glm1 <- glm(negative ~ type, family=binomial(link='logit'), data=snp) 
 summary(glm1) 
 exp(coef(glm1))
 
 #### MODEL2:
-glm2 <- glm(comments_dummy ~ type + likes_count_fb2 , family=binomial(link='logit'), data=snp) 
+glm2 <- glm(negative ~ type + likes_count_fb2, family=binomial(link='logit'), data=snp) 
 summary(glm2) 
 exp(coef(glm2))
 
@@ -254,11 +249,14 @@ data.pred
 # the predicted probability of having more than average comments on the post is 0.52 for posts that contains a video.
 
 # plotting the predicted probability:
-data.pred2 <- with(snp, data.frame(likes_count_fb2 = rep(seq(from = 0.6021, to = 4.4158, length.out = 10), 3), type = c("video", "link","photo"))) 
+# we are going to plot the predicted probability of having negative comments by number of likes and
+# type of post, so we will create 50 values for the likes between 0.6021 and 4.4158, at each value of type (3).
+# you can play with those values when plotting your own data.
+data.pred2 <- with(snp, data.frame(likes_count_fb2 = rep(seq(from = 0.6021, to = 4.4158, length.out = 50), 3), type = c("video", "link","photo")))
 data.pred2
 data.pred2$pred2 <- predict(glm2, newdata = data.pred2 , type = "response")
 head(data.pred2)
-# graph code:
+# code for the graph
 library(ggplot2)
 ggplot(data.pred2, aes(x = likes_count_fb2, y = pred2)) + 
   geom_line(aes(colour = type)) +
