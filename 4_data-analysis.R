@@ -187,9 +187,69 @@ CrossTable(table1, expected = TRUE, prop.r = FALSE, prop.c = FALSE,
            prop.t = FALSE, prop.chisq = FALSE)
 
 # LOGISTIC REGRESSION
-glm1 <- glm(XXX ~ log10(comments_count_fb), family=link('logit'))
+# let's perfom a logistic regression on comments by type of post.
+# we will use the glm function: glm(formula, family=familytype(link=linkfunction), data=)
 
-#predicted values
+# Family	Default / Link Function
+# binomial /	(link = "logit")
+# # binomial /	(link = "probit")
+# gaussian	/ (link = "identity")
+# Gamma / (link = "inverse")
+# inverse.gaussian	/ (link = "1/mu^2")
+# poisson /	(link = "log")
+# quasibinomial /	(link = "logit")
+# quasi /	(link = "identity", variance = "constant")
+# quasipoisson	/ (link = "log")
+
+# DEPENDENT VARIABLE
+# first, we need to create a binary variable for comments on a post. we will dived the variable by
+# posts that received more than the average # of comments and posts that received less than average.
+summary(snp$comments_count_fb)
+snp$comments_dummy[snp$comments_count_fb< 413.4] <- 1
+snp$comments_dummy[snp$comments_count_fb>=413.4] <- 0
+summary(snp$comments_dummy)
+table(snp$comments_dummy)
+
+# INDEPENDENT VARIABLE
+# (1) type of post
+summary(snp$type)
+# (2) valence
+summary(snp$valence)
+hist(snp$valence)
+
+#### MODEL1: using link as the reference group:
+glm1 <- glm(comments_dummy ~ type, family=binomial(link='logit'), data=snp) 
+summary(glm1) 
+exp(coef(glm1))
+
+#### MODEL2:
+glm2 <- glm(comments_dummy ~ type + , family=binomial(link='logit'), data=snp) 
+summary(glm2) 
+exp(coef(glm2))
+
+# predicted probabiltiies: 
+# the codes below are taken from: https://stats.idre.ucla.edu/r/dae/logit-regression/
+# we recomend checking the website if you want to calculate predicted probabilities using your data. 
+# 
+# (1) we will start by calculating the predicted probability of having more than average comments on 
+# the post for each type of post holding valence at the mean.
+# first, we create the data frame to calculate the predicted probability.
+data.pred <- with(snp, data.frame(valence = mean(valence), type = c("video", "link","photo"))) 
+data.pred  
+# now that we have the data frame we want to use to calculate the predicted probabilities, we can tell R to 
+# create the predicted probabilities. 
+data.pred$pred <- predict(glm2, newdata = data.pred , type = "response")
+# (a) the predict_glm2$pred tells R that we want to create a new variable in the dataset (data frame) predict_glm2 called "pred"
+# (b) the rest of the command tells R that the values of "pred" should be predictions made using the predict( ) function
+# (c) the options within the parentheses tell R that the predictions should be based on the analysis glm2 with values of the predictor 
+# variables coming from predict_glm2
+data.pred 
+# the predicted probability of having more than average comments on the post is 0.52 for posts that contains a video.
+
 #plot
+data.pred2 <- with(snp, data.frame(valence = rep(seq(from = -7, to = 10),1), type = c("video", "link","photo"))) 
+data.pred2
+data.pred2$pred2 <- predict(glm2, newdata = data.pred2 , type = "response")
+exp(coef(glm1))
 
 
