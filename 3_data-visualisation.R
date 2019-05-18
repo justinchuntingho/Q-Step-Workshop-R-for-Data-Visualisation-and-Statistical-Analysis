@@ -9,7 +9,7 @@
 ####################################################################################
 
 # The following code will load a dataset into R's memory and stored an object named 'snp'.
-snp <- read_csv("data/snp.csv") # Load the file 'snp.csv', put it as an object called 'snp'
+snp <- read.csv("data/snp.csv", stringsAsFactors = FALSE) # Load the file 'snp.csv', put it as an object called 'snp'
 
 # Let's conduct some basic exploration
 # The 'head()' function will return the first sixth element of an object:
@@ -23,6 +23,13 @@ str(snp)
 # summary statistics for each column
 summary(snp)
 
+# change the variables to the right format
+snp$date <- as.Date(snp$date)
+snp$type <- as.factor(snp$type)
+snp$sentiment <- as.factor(snp$sentiment)
+
+# try again
+summary(snp)
 
 # We could use functions to gain information from the vector
 # For example, 'mean()' will gives us the mean, 'max()' will give us the maximun value
