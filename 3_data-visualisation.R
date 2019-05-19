@@ -57,17 +57,6 @@ snp[which.max(snp$likes_count_fb), ]
 # Tricky Questions: Could you find out how to just extract the link?
 # Tips: start with extracting all the links ('snp$post_link'),
 # then use the index to select the one we want
-
-########## Solution ########## 
-# Find the post
-snp[which.max(snp$comments_count_fb), ]
-
-# Get the link directly
-snp$post_link[which.max(snp$comments_count_fb)]
-
-# Do the same for shares
-snp$post_link[which.max(snp$shares_count_fb)]
-
 ##############################
 
 ####################################################################################
@@ -122,11 +111,6 @@ ggplot(data = snp, aes(x = comments_count_fb)) +
 
 ########## Exercise ########## 
 # Using the codes above, create a histogram for Likes count ('likes_count_fb')
-
-########## Solution ########## 
-ggplot(data = snp, aes(x = likes_count_fb)) +
-  geom_histogram(aes(fill = type), binwidth = 100, alpha = 0.5)
-
 ##############################
 
 
@@ -181,29 +165,6 @@ ggplot(snp, aes(x = type, y = comments_count_fb)) +
 # boxplot. An alternative to the boxplot is the violin plot, where the shape
 # (of the density of points) is drawn.
 # - Replace the box plot with a violin plot; see `geom_violin()`.
-
-########## Solution ########## 
-# 1. 
-# You might get this one
-ggplot(snp, aes(x = type, y = valence, color = sentiment)) +
-  geom_boxplot(alpha = 0) +
-  geom_jitter(alpha = 0.5)
-
-# The solution
-ggplot(snp, aes(x = type, y = valence)) +
-  geom_boxplot(alpha = 0) +
-  geom_jitter(alpha = 0.5, aes(color = sentiment))
-
-# A even better solution (ordering matters!)
-ggplot(snp, aes(x = type, y = valence)) +
-  geom_jitter(alpha = 0.5, aes(color = sentiment)) +
-  geom_boxplot(alpha = 0)
-
-# 2.
-ggplot(snp, aes(x = type, y = valence)) +
-  geom_jitter(alpha = 0.5, aes(color = sentiment)) +
-  geom_violin(alpha = 0)
-
 ############################## 
 
 
@@ -297,15 +258,6 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
 ########## Exercise ########## 
 # Make a scatter plot of shares by comments count, log both axes,
 # color them by post type, change shape by post type (adding 'shape = type ' in aes())
-
-
-########## Solution ########## 
-ggplot(data = snp, aes(x = comments_count_fb, y = shares_count_fb, color = type, shape = type)) +
-  geom_point(alpha = 0.5) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(method = "lm", se = FALSE)
-
 ##############################
 
 
@@ -398,19 +350,6 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
 # TIPS: You have to use as.Date() to change the human date to Date format,
 # and use it to specify the 'xintercept = ' (lookup ?geom_vline()).
 #
-########## Solution ########## 
-# 1.
-plot_data <- snp %>%
-  group_by(type, date=floor_date(date, "week")) %>%
-  summarise(total_comments = sum(comments_count_fb))
-
-ggplot(data = plot_data, aes(x = date, y = total_comments, color = type)) +
-  geom_line()
-
-# 2.
-ggplot(data = plot_data, aes(x = date, y = total_comments, color = type)) +
-  geom_line()+
-  geom_vline(xintercept = as.Date("2016-06-23"), color = "purple", linetype = "dashed")
 ##############################
 
 ####################################################################################
