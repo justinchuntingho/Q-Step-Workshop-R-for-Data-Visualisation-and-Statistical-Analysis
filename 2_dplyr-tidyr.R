@@ -1,7 +1,7 @@
 # ---
 # title: Introducing dplyr and tidyr
 # author: Justin Ho, The Carpentries
-# last updated: 15/05/2019
+# last updated: 19/05/2019
 # credit: Adapted from Data Carpentry workshops (Social Science Curriculum)
 # ---
 
@@ -178,17 +178,15 @@ interviews %>%
   count(village, sort = TRUE)
 
 ########## Exercise ########## 
-# 1. How many households in the survey have an average of
-# two meals per day? Three meals per day? Are there any other numbers
-# of meals represented?
+# 1. How many households in the survey have two meals per day? 
+# Three meals per day? Are there any other numbers of meals represented?
 # 2. Use `group_by()` and `summarize()` to find the mean, min, and max
 # number of household members for each village. Also add the number of
 # observations (hint: see `?n`).
 # 3. What was the largest household interviewed in each month?
 # Tips: Attach the lubridate library using 'library(lubridate)' and
 # use the following code: mutate(month = month(interview_date), day = day(interview_date), year = year(interview_date))
-
-
+############################## 
 
 ####################################################################################
 ## Reshaping with gather and spread                                               ##

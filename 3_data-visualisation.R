@@ -339,7 +339,7 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
   geom_area(position = "fill")
 
 ########## Exercise ########## 
-# 1. Using the above codes, aggregate comment counts by week (look up ?floor_date).
+# 1. Using the above codes, aggregate comment counts by week (look up ?floor_date()).
 # Plot an line graph showing the comments count per post type
 # TIPS: use something like this
 #  plot_data <- snp %>% 
