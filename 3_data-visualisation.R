@@ -143,17 +143,17 @@ ggplot(snp, aes(x = type)) +
 
 # We can use the `fill` aesthetic for the `geom_bar()` geom to color bars by
 # the portion of sentiment of each post type.
-ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) + 
+ggplot(snp, aes(x = type, fill = sentiment)) + 
   geom_bar()
 
 # We can change how these bars are placed, 
 # for example 'position = "dodge"' will place them side by side
-ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) + 
+ggplot(snp, aes(x = type, fill = sentiment)) + 
   geom_bar(position = "dodge")
 
 # If we use 'position = "fill"', all bar will strech out to fill the whole y axis
 # The y axis then become proportion
-ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) + 
+ggplot(snp, aes(x = type, fill = sentiment)) + 
   geom_bar(position = "fill") +
   labs(y = "proportion")
 
@@ -173,8 +173,8 @@ ggplot(snp, aes(x = type, y = comments_count_fb)) +
 
 ########## Exercise ########## 
 # 1. Create a boxplot for `valence` for each post type. Overlay the boxplot
-# layer on a jitter layer to show actual measurements.
-# - Add color to the data points on your boxplot according to the sentiment (`sentiment`).
+# layer on a jitter layer to show actual measurements (the ordering matters!).
+# - Color the data points on your jitter layer by sentiment (`sentiment`).
 # Remember you can add aes() inside a geom_*
 # 2. Boxplots are useful summaries, but hide the *shape* of the distribution. For
 # example, if the distribution is bimodal, we would not see it in a
@@ -187,17 +187,22 @@ ggplot(snp, aes(x = type, y = comments_count_fb)) +
 # You might get this one
 ggplot(snp, aes(x = type, y = valence, color = sentiment)) +
   geom_boxplot(alpha = 0) +
-  geom_jitter(alpha = 0.1)
+  geom_jitter(alpha = 0.5)
 
 # The solution
 ggplot(snp, aes(x = type, y = valence)) +
   geom_boxplot(alpha = 0) +
-  geom_jitter(alpha = 0.1, aes(color = sentiment))
+  geom_jitter(alpha = 0.5, aes(color = sentiment))
+
+# A even better solution (ordering matters!)
+ggplot(snp, aes(x = type, y = valence)) +
+  geom_jitter(alpha = 0.5, aes(color = sentiment)) +
+  geom_boxplot(alpha = 0)
 
 # 2.
 ggplot(snp, aes(x = type, y = valence)) +
-  geom_violin(alpha = 0) +
-  geom_jitter(alpha = 0.1, aes(color = sentiment))
+  geom_jitter(alpha = 0.5, aes(color = sentiment)) +
+  geom_violin(alpha = 0)
 
 ############################## 
 
@@ -285,7 +290,9 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
   scale_x_log10() +
   scale_y_log10() +
   geom_smooth(method = "lm", se = FALSE) +
+  theme_bw() +
   facet_wrap(~ type)
+
 
 ########## Exercise ########## 
 # Make a scatter plot of shares by comments count, log both axes,
@@ -313,8 +320,6 @@ library(lubridate)
 
 # To plot a time series, the first thing you have to do is to transform your data into time/date format
 # There are many formats for time and date, but the simpliest way would probably be:
-
-snp$date <- as.Date(snp$date) # Defining a new column called 'date'
 
 # Simply plot the same scatter point, using 'date' as the x axis
 ggplot(data = snp, aes(x = date, y = likes_count_fb)) +
@@ -382,21 +387,30 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
   geom_area(position = "fill")
 
 ########## Exercise ########## 
-# Using the above codes, aggregate comment counts by month.
-# Plot an area plot (select a sensibile position)
-
-# TIPS:
-# plot_data <- snp %>% 
-#   group_by(type, date=floor_date(date, "month")) %>%
-#   summarise(###### = sum(#######))  # Change the ########### into the variable names
-
+# 1. Using the above codes, aggregate comment counts by week (look up ?floor_date).
+# Plot an line graph showing the comments count per post type
+# TIPS: use something like this
+#  plot_data <- snp %>% 
+#     group_by(type, date=floor_date(date, ######)) %>%
+#     summarise(###### = sum(#######))
+#
+# 2. Use geom_vline() to add the date of the EU referendum (23 June 2016).
+# TIPS: You have to use as.Date() to change the human date to Date format,
+# and use it to specify the 'xintercept = ' (lookup ?geom_vline()).
+#
 ########## Solution ########## 
+# 1.
 plot_data <- snp %>%
-  group_by(type, date=floor_date(date, "month")) %>%
+  group_by(type, date=floor_date(date, "week")) %>%
   summarise(total_comments = sum(comments_count_fb))
 
-ggplot(data = plot_data, aes(x = date, y = total_comments, fill = type)) +
-  geom_area(position = "fill")
+ggplot(data = plot_data, aes(x = date, y = total_comments, color = type)) +
+  geom_line()
+
+# 2.
+ggplot(data = plot_data, aes(x = date, y = total_comments, color = type)) +
+  geom_line()+
+  geom_vline(xintercept = as.Date("2016-06-23"), color = "purple", linetype = "dashed")
 ##############################
 
 ####################################################################################
