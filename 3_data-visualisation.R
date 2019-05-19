@@ -1,7 +1,7 @@
 # ---
 # title: Data Visualisation using ggplot2
 # author: Justin Ho
-# last updated: 15/05/2019
+# last updated: 19/05/2019
 # ---
 
 ####################################################################################
@@ -58,6 +58,16 @@ snp[which.max(snp$likes_count_fb), ]
 # Tips: start with extracting all the links ('snp$post_link'),
 # then use the index to select the one we want
 
+########## Solution ########## 
+# Find the post
+snp[which.max(snp$comments_count_fb), ]
+
+# Get the link directly
+snp$post_link[which.max(snp$comments_count_fb)]
+
+# Do the same for shares
+snp$post_link[which.max(snp$shares_count_fb)]
+
 ##############################
 
 ####################################################################################
@@ -93,20 +103,29 @@ ggplot(data = snp, aes(x = comments_count_fb)) +
   geom_vline(xintercept=mean_comment, color = "red", linetype = "dashed")
 
 # We could change color by adding arguments (fill means color of the filling in ggplot2)
-ggplot(data = snp, aes(x = comments_count_fb, fill = "red")) +
-  geom_histogram(binwidth = 100)
+ggplot(data = snp, aes(x = comments_count_fb)) +
+  geom_histogram(binwidth = 100, fill = "red")
 
 # How about making it transparent?
-ggplot(data = snp, aes(x = comments_count_fb, fill = "red")) +
-  geom_histogram(binwidth = 100, alpha = 0.8)
+ggplot(data = snp, aes(x = comments_count_fb)) +
+  geom_histogram(binwidth = 100, fill = "red", alpha = 0.5)
 
-# We can easily coloring them by group by changing "red" to type 
-# (the column that contain information about post type in the snp dataframe)
+# Instead of colouring everything with the same colour, we could colour them by type 
+# since we are using a variable in the dataframe, we have to put it inside aes()
 ggplot(data = snp, aes(x = comments_count_fb, fill = type)) +
-  geom_histogram(binwidth = 100, alpha = 0.8)
+  geom_histogram(binwidth = 100, alpha = 0.5)
+
+# Remember aesthetic mappings can also be set in individual layers
+# In this case the 'fill' will only apply to geom_histogram (even if there are more geoms)
+ggplot(data = snp, aes(x = comments_count_fb)) +
+  geom_histogram(aes(fill = type), binwidth = 100, alpha = 0.5)
 
 ########## Exercise ########## 
 # Using the codes above, create a histogram for Likes count ('likes_count_fb')
+
+########## Solution ########## 
+ggplot(data = snp, aes(x = likes_count_fb)) +
+  geom_histogram(aes(fill = type), binwidth = 100, alpha = 0.5)
 
 ##############################
 
@@ -114,13 +133,16 @@ ggplot(data = snp, aes(x = comments_count_fb, fill = type)) +
 ####################################################################################
 ## Visualising categorical variables                                              ##
 ####################################################################################
+# Barplots are also useful for visualizing categorical data. By default,
+# `geom_bar` accepts a variable for x, and plots the number of instances each
+# value of x (in this case, post type) appears in the dataset.
 
 # We could create a bar plot:
 ggplot(snp, aes(x = type)) + 
   geom_bar()
 
-# We could also create a plot for two categorical variables
-# We color the bar by the sentiment of the posts
+# We can use the `fill` aesthetic for the `geom_bar()` geom to color bars by
+# the portion of sentiment of each post type.
 ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) + 
   geom_bar()
 
@@ -134,6 +156,51 @@ ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) +
 ggplot(snp, aes(x = type, y = ..count.., fill = sentiment)) + 
   geom_bar(position = "fill") +
   labs(y = "proportion")
+
+####################################################################################
+## Visualising continuous and categorical variable                                ##
+####################################################################################
+# We can use boxplots to visualize the comment count for each post type:
+# Remember the continous variable always go to y
+ggplot(snp, aes(x = type, y = comments_count_fb)) +
+  geom_boxplot()
+
+# We could also add points to a boxplot to have a better idea of the number of
+# measurements and of their distribution:
+ggplot(snp, aes(x = type, y = comments_count_fb)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(alpha = 0.3, color = "tomato")
+
+########## Exercise ########## 
+# 1. Create a boxplot for `valence` for each post type. Overlay the boxplot
+# layer on a jitter layer to show actual measurements.
+# - Add color to the data points on your boxplot according to the sentiment (`sentiment`).
+# Remember you can add aes() inside a geom_*
+# 2. Boxplots are useful summaries, but hide the *shape* of the distribution. For
+# example, if the distribution is bimodal, we would not see it in a
+# boxplot. An alternative to the boxplot is the violin plot, where the shape
+# (of the density of points) is drawn.
+# - Replace the box plot with a violin plot; see `geom_violin()`.
+
+########## Solution ########## 
+# 1. 
+# You might get this one
+ggplot(snp, aes(x = type, y = valence, color = sentiment)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(alpha = 0.1)
+
+# The solution
+ggplot(snp, aes(x = type, y = valence)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(alpha = 0.1, aes(color = sentiment))
+
+# 2.
+ggplot(snp, aes(x = type, y = valence)) +
+  geom_violin(alpha = 0) +
+  geom_jitter(alpha = 0.1, aes(color = sentiment))
+
+############################## 
+
 
 ####################################################################################
 ## Visualising two continuous variables                                           ##
@@ -155,13 +222,13 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
 # You can even add the same geom twice, with different values on the x and y axes
 ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
   geom_point() +
-  geom_point(aes(x = mean_comment, y = mean_like, color = "red", size = 6))
+  geom_point(aes(x = mean_comment, y = mean_like), color = "red", size = 6)
 
 # Use the argument 'color = "red"' for red dots
-ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb, color = "red")) +
-  geom_point()
+ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
+  geom_point(color = "red")
 
-# Or coloring them by post type
+# Or coloring them by post type, we have to put it inside aes() since we are invoking a variable
 ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb, color = type)) +
   geom_point() 
 
@@ -172,7 +239,6 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb, color = type))
   geom_point(alpha = 0.5) + # I made the points transparent for visiblity
   scale_x_log10() +
   scale_y_log10()
-
 
 # Or fit a line
 ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb, color = type)) +
@@ -225,6 +291,14 @@ ggplot(data = snp, aes(x = comments_count_fb, y = likes_count_fb)) +
 # Make a scatter plot of shares by comments count, log both axes,
 # color them by post type, change shape by post type (adding 'shape = type ' in aes())
 
+
+########## Solution ########## 
+ggplot(data = snp, aes(x = comments_count_fb, y = shares_count_fb, color = type, shape = type)) +
+  geom_point(alpha = 0.5) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method = "lm", se = FALSE)
+
 ##############################
 
 
@@ -274,6 +348,7 @@ ggplot(data = snp, aes(x = date, y = likes_count_fb, color = type)) +
   scale_x_date(labels = date_format("%m/%y"), date_breaks = "1 month") +
   ylim(c(0, 2000))
 
+
 ####################################################################################
 ## Data Wrangling with dplyr                                                      ##
 ####################################################################################
@@ -315,8 +390,14 @@ ggplot(data = plot_data, aes(x = date, y = total_likes, fill = type)) +
 #   group_by(type, date=floor_date(date, "month")) %>%
 #   summarise(###### = sum(#######))  # Change the ########### into the variable names
 
-##############################
+########## Solution ########## 
+plot_data <- snp %>%
+  group_by(type, date=floor_date(date, "month")) %>%
+  summarise(total_comments = sum(comments_count_fb))
 
+ggplot(data = plot_data, aes(x = date, y = total_comments, fill = type)) +
+  geom_area(position = "fill")
+##############################
 
 ####################################################################################
 ## What's next?                                                                   ##
