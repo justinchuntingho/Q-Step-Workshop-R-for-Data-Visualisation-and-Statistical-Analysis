@@ -111,35 +111,37 @@ summary(anova)
 # DEPENDENT VARIABLE
 # first, let's check the distribution of the dependent variable (you can also try to write the ggplot command):
 hist(snp$likes_count_fb) # the variable is not normally distributed.
+summary(snp$likes_count_fb)
 # logarithm transformation is often used for right skewed data (mean > median).
-# because our variable includes 0, I will exclude those cases to avoid problems (there are more complex 
-# and better ways to deal with this problem, but this is beyond the purpose of this workshop.)
-snp_lm <- snp[which(snp$likes_count_fb !=0),] # creating a new data frame with no 0 values for the dependent variable.
-# we will use this data frame to run the regression analysis.
 # you can save the transformed variable in your data frame:
-snp_lm$likes_count_fb2 <- log10(snp_lm$likes_count_fb)             
+snplikes_count_fb2 <- log10(snp$likes_count_fb)             
 # or you can simply include the log10 transformation when you are analysis the variable, for example:
 library(ggplot2)
-ggplot(snp_lm, aes(x=log10(likes_count_fb)))+
+ggplot(snp, aes(x=log10(likes_count_fb)))+
   geom_histogram()+
   theme_bw()
 
 # INDEPENDENT VARIABLES
 # (1) number of comments
-summary(snp_lm$comments_count_fb) # the variable also includes 0 values
-snp_lm <- snp_lm[which(snp_lm$comments_count_fb !=0),] # sample size drops from 1732 to XXXX.
+summary(snp_lm$comments_count_fb)
+# we are also going to use logarithm transformation on this variable.
+# because our variable includes 0, I will exclude those cases to avoid problems (there are more complex 
+# and better ways to deal with this problem, but this is beyond the purpose of this workshop.)
+snp_lm <- snp[which(snp$comments_count_fb !=0),] # creating a new data frame with no 0 values for the dependent variable.
+                                                 # we will use this data frame to run the regression analysis.
+                                                 # sample size drops from 1732 to 1724.
 hist(snp_lm$comments_count_fb) # checking the distribution for the independent variable
 hist(log10(snp_lm$comments_count_fb)) # checking the transformation for the independent variable
 # (2) sentiment
 summary(snp_lm$sentiment) # because the variable is a factor, R will automatically create dummies when you run the regression.
 # I usually create dummies (it is easier to change reference group, combine categories, etc.) using the 
 # plyr package.
-snp$negative <- revalue(snp$sentiment, c("negative"= 1, "neutral"=0, "positive"=0))
-snp$neutral <- revalue(snp$sentiment, c("negative"= 0, "neutral"=1, "positive"=0))
-snp$positive <- revalue(snp$sentiment, c("negative"= 0, "neutral"=0, "positive"=1))
-table(snp$negative,snp$sentiment) # checking the recoding is correct
-table(snp$neutral,snp$sentiment)
-table(snp$positive,snp$sentiment)
+snp_lm$negative <- revalue(snp_lm$sentiment, c("negative"= 1, "neutral"=0, "positive"=0))
+snp_lm$neutral <- revalue(snp_lm$sentiment, c("negative"= 0, "neutral"=1, "positive"=0))
+snp_lm$positive <- revalue(snp_lm$sentiment, c("negative"= 0, "neutral"=0, "positive"=1))
+table(snp_lm$negative,snp_lm$sentiment) # checking the recoding is correct
+table(snp_lm$neutral,snp_lm$sentiment)
+table(snp_lm$positive,snp_lm$sentiment)
 
 #### MODEL 1:
 # scatter plot with the regression line using ggplot2
