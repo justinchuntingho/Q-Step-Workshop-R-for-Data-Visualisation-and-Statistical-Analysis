@@ -3,7 +3,7 @@
 ####################################################################################
 
 # R Basics ---------------------------------------------------------------------
-snp <- read.csv("snp.csv")
+snp <- read.csv("data/snp.csv")
 names(snp) # names variables in the data frame.
 search() # shows what is in the current R environment.
 attach(snp) # attach the dataset to the R environment. once you have attached the data in the environment, you can just use variables
