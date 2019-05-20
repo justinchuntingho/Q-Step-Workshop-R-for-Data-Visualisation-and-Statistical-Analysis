@@ -48,6 +48,12 @@ devtools::install_github("paulponcet/modeest")
 library(modeest) # this package is tricky to use because there are many ways of estimating the mode.
 library(help = "modeest") # open the documentation for the package. we want to calculate the most likely value 'mlv'
 mlv(snp$likes_count_fb)
+# if the package modeest doesn't work, you can create a function to calculate the mode.
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+getmode(snp$likes_count_fb)
 ### variance and standard deviation
 var(snp$likes_count_fb)
 sd(snp$likes_count_fb)
