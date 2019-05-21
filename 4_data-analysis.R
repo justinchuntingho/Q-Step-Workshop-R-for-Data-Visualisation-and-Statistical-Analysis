@@ -172,11 +172,25 @@ summary(lm2)
 # presenting the two models.
 install.packages("stargazer")
 library(stargazer)
+
+# html
+stargazer(lm1, lm2,
+          title = "Regression on number of likes on Facebook by comments and sentiment",
+          dep.var.labels=c("Log 10 of number of likes on Facebook"),
+          covariate.labels=c("log 10 of number of comments","neutral", "positive", "constant"),
+          align = TRUE, type = "html", out = "ols_likes_fb.html")
+# txt
 stargazer(lm1, lm2,
           title = "Regression on number of likes on Facebook by comments and sentiment",
           dep.var.labels=c("Log 10 of number of likes on Facebook"),
           covariate.labels=c("log 10 of number of comments","neutral", "positive", "constant"),
           align = TRUE, type = "text", out = "ols_likes_fb.txt")
+#latex
+stargazer(lm1, lm2,
+          title = "Regression on number of likes on Facebook by comments and sentiment",
+          dep.var.labels=c("Log 10 of number of likes on Facebook"),
+          covariate.labels=c("log 10 of number of comments","neutral", "positive", "constant"),
+          align = TRUE)
 
 # GLMs ---------------------------------------------------------------------
 
