@@ -49,6 +49,7 @@ library(modeest) # this package is tricky to use because there are many ways of 
 library(help = "modeest") # open the documentation for the package. we want to calculate the most likely value 'mlv'
 mlv(snp$likes_count_fb)
 # if the package modeest doesn't work, you can create a function to calculate the mode.
+# if you want to create your own function, Hadley Wickham has a great video explaining it https://www.youtube.com/watch?v=M4fMccWy5lU
 getmode <- function(v) {
    uniqv <- unique(v)
    uniqv[which.max(tabulate(match(v, uniqv)))]
