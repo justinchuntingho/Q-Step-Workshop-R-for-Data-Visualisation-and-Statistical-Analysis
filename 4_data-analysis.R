@@ -91,6 +91,7 @@ table(snp$type, snp$sentiment) %>% # create a table
 
 # T-TEST: 
 # the function for both one- and two-sample t test is t.test.
+
 ### one-sample t-test: we just need to specify the variable of interest and then we need to specify the baseline for comparison.
 # let's pretend that 150 is the mean number of likes per post on Facebook for all the political parties in the UK. 
 # we want to test if the mean number of likes per post on Facebook on the SNP page is the different for the mean for 
@@ -99,7 +100,16 @@ table(snp$type, snp$sentiment) %>% # create a table
 # H1: SNP has differnt mean number of likes per post on Facebook.
 t.test(snp$likes_count_fb, mu = 150) # p < 0.05: we can reject the null hypothesis.
 
-### two-sample t-test: we want to compare the difference in the mean of two different groups.
+### two-sample t-test: compares the means between two unrelated groups on a dependent continuous variable. 
+# This is often used to determine whether the difference in mean values between two groups are statistically significant, 
+# or that there is a systematic difference between two groups. There are a few assumptions when we run t-tests, most of which 
+# must be met.
+
+# 1. The dependent variable is continuous.
+# 2. The dependent variable should be normally distributed.
+# 3. The independent variable is categorical with two groups.
+# 4. No participant is in both groups. (There is independence of observations.)
+
 # let's compare the mean number of likes per post in posts that contain a link vs posts that contain photo and video
 # first, we will need to recode the variable for type of post into a dummy for link (link = 1, video & photo = 0)
 summary(snp$type)
@@ -112,7 +122,8 @@ ttest
 
 # ANOVA
 # used to compare the difference between three or more groups. It tells if there is a significant difference, but we are not sure 
-# which specific groups are different from each other. We can see if there is a different in the number of likes by type of post using
+# which specific groups are different from each other. 
+# We can see if there is a different in the number of likes by type of post using
 # anova:
 anova <- aov(snp$likes_count_fb ~ snp$type)
 summary(anova)
@@ -220,9 +231,9 @@ CrossTable(table1, expected = TRUE, prop.r = FALSE, prop.c = FALSE,
 # we will use the glm function: glm(formula, family=familytype(link=linkfunction), data=)
 
 # Family	Default / Link Function
-# binomial /	(link = "logit")
-# # binomial /	(link = "probit")
-# gaussian	/ (link = "identity")
+# binomial / (link = "logit")
+# binomial / (link = "probit")
+# gaussian / (link = "identity")
 # Gamma / (link = "inverse")
 # inverse.gaussian	/ (link = "1/mu^2")
 # poisson /	(link = "log")
