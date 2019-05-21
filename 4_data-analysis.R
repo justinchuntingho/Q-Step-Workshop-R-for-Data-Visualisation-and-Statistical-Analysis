@@ -81,6 +81,12 @@ prop.table(table1, 2) # column percentages
 round(100*prop.table(table1,1),2)
 round(100*prop.table(table1,2),2)
 
+# using pipe to create a table
+table(snp$type, snp$sentiment) %>% # create a table 
+  prop.table() %>% # calculate the probability for the table
+  "*"(100) %>% # multiple by 100
+  round(.,1) # round the proportion to 1 decimal place
+
 # LMs ---------------------------------------------------------------------
 
 # T-TEST: 
