@@ -10,10 +10,7 @@
 # You will have to create a R-Project for the exercise.
 # Download the data set and save it in the project's directory
 ################################################################################################### 
-# Explore the data set using the functions:
-# names()
-# summary()
-# head()
+# Explore the data
 ################################################################################################### 
 # (1) Is there an association between race and socio-economic status?
 # a.Explore the variables "race" and "ses" 
@@ -25,16 +22,15 @@
 # (2) Is there a difference in math scores between those in public and private school?
 # a. The dependent variable will be the student’s math scores (math) and the independent variable will 
 # be their school type (schtyp). Explore the variables.
-# b. Produce a histogram for the dependent variable and put a normal curve on it, to check that the 
-# variable is *relatively* normally distributed. You can use ggplot2 or the core code to produce 
-# the graph.
+# b. Produce a histogram for the dependent variable to check that the variable is *relatively* normally distributed. 
+# You can use ggplot2 or the core code to produce the graph.
 # c. Perform a t-test to compare the mean math score between public and private school.
 
 # (3) Is there a relationship between students’ reading and writing scores?
 # a. Produce a scatter plot of the relationship between students' writing and reading scores (You can
-# include the ‘best’ line through the data points)
-# b. Fit the regression model. In this exercise, the dependent variable is students’ writing score (“write”) 
+# include the ‘best’ line through the data points). In this exercise, the dependent variable is students’ writing score (“write”) 
 # and the independent variable is students’ reading score (“read”).
+# b. Fit the regression model. 
 # c. Check your residuals. Use the function plot().
 
 # (4) Is there an association between students' math scores and their socio-economic background controlling by gender?
