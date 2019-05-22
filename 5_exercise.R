@@ -24,9 +24,8 @@
 
 # (2) Is there a difference in math scores between those in public and private school?
 # a. The dependent variable will be the student’s math scores (math) and the independent variable will 
-# be their school type (schtyp). 
-# b. Explore the variables.
-# c. Run a histogram for the dependent variable and put a normal curve on it, to check that the 
+# be their school type (schtyp). Explore the variables.
+# b. Run a histogram for the dependent variable and put a normal curve on it, to check that the 
 # variable is *relatively* normally distributed. You can use ggplot2 or the core code to produce 
 # the graph.
 # c. Perform a t-test to compare the mean math score between public and private school.
