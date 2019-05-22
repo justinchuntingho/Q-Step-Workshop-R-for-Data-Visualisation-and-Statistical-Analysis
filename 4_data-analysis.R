@@ -5,6 +5,8 @@
 # R Basics ---------------------------------------------------------------------
 snp <- read.csv("data/snp.csv")
 names(snp) # names variables in the data frame.
+
+
 search() # shows what is in the current R environment.
 attach(snp) # attach the dataset to the R environment. once you have attached the data in the environment, you can just use variables
 # within your data frame like any other R objects - just calling them by their name. Before attaching the data, you needed 
@@ -72,14 +74,19 @@ table1 <- table(snp$type, snp$sentiment) # type will be rows, sentiment will be 
 table1 # print table 
 # proportion
 prop.table(table1) # cell percentages
-prop.table(table1, 1) # row percentages 
-prop.table(table1, 2) # column percentages
+prop.table(table1, margin = 1) # marginal total in row 
+prop.table(table1, margin = 2) # marginal total in column 
 # percentage
-100*prop.table(table1,1)
-100*prop.table(table1,2)
+100*prop.table(table1,1) 
+100*prop.table(table1,2) 
 # rounding by 2 decimal places
-round(100*prop.table(table1,1),2)
+round(100*prop.table(table1,1),2) 
 round(100*prop.table(table1,2),2)
+
+addmargins(round(100*prop.table(table1,2),2))
+# latex
+library(xtable)
+xtable(table1)
 
 # using pipe to create a table
 table(snp$type, snp$sentiment) %>% # create a table 
@@ -177,6 +184,11 @@ ggplot(snp_lm, aes(x=log10(comments_count_fb), y=log10(likes_count_fb)))+
 # regression model
 lm1 <- lm(log10(likes_count_fb) ~ log10(comments_count_fb), data = snp_lm)
 summary(lm1)
+
+# you can store the residuals and predicted values in your data set
+residuals(lm1) 
+fitted(lm1) 
+predict(lm1)
 # checking the residuals
 plot(lm1)
 # if you are interest in using R to perform robust regression, you can check the step by step on the UCLA website:
